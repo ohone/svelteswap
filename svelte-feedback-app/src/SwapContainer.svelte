@@ -11,7 +11,7 @@ let toAmount = 0;
 
 async function getTokens(){
     const res = await fetch('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
-    const text = JSON.parse(await res.text());
+    const text : any[] = JSON.parse(await res.text());
     const ethTokens = text.filter(o => Object.prototype.hasOwnProperty.call(o.platforms,'ethereum'));
     return ethTokens;
 }
@@ -19,7 +19,7 @@ async function getTokens(){
 let tokenListPromise = getTokens();
 $: buttonDisabled = fromAmount === null || fromAmount === undefined || fromAmount == 0;
 
-function swapTokens(event){
+function swapTokens(_){
     let intermediary = fromToken;
     let tAmount = fromAmount;
     fromToken = toToken;
@@ -50,5 +50,6 @@ function swapTokens(event){
         max-width: 480px;
         position: relative;
         margin: auto;
+        padding: 10px;
     }
 </style>
