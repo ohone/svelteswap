@@ -7,7 +7,7 @@ export class YearnTokenListAdapter implements ITokenListAdapter {
     async GetTokenList(): Promise<Token[]> {
         const res = await fetch('https://yearn.science/static/tokenlist.json');
         const response : any = JSON.parse(await res.text());
-        const text: Token[] = response.tokens;
+        const text: Token[] = response.tokens.flatMap((f: any) => {f.provider = this.Name; return f});
         return text;
     }
 }

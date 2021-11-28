@@ -9,20 +9,54 @@
         [new YearnTokenListAdapter(), true],
     ];
 
-    function generateTokens() {
-        tokens.length = 0;
+    async function TokenListsToTokens(
+        tokenLists: [ITokenListAdapter, boolean][]
+    ): Promise<Token[]> {
+        const p = await Promise.all<Token[]>(
+            tokenLists
+                .flatMap((o) => o[0].GetTokenList())
+                .reduce((sum, current) => {
+                    sum.push(current);
+                    return sum;
+                }, [])
+        );
+        return p.flat();
+    }
 
-        let tokenFetchPromises: Array<Promise<Token[]>> = tokenLists
-            .filter((o) => o[1])
-            .flatMap((o) => o[0].GetTokenList())
-            .reduce((sum, current) => {
-                sum.push(current);
-                return sum;
-            }, []);
+    function TokensUniqueByAddress(tokens: Token[]): Token[] {
+        const arr: Token[] = [];
+        const map = new Map();
+        for (const item of tokens.filter((f) => f.address)) {
+            if (!map.has(item.address)) {
+                map.set(item.address, true);
+                arr.push(item);
+            }
+        }
+        return arr;
+    }
 
-        Promise.all(tokenFetchPromises).then((p) => {
-            tokens = [...tokens, ...p.flat()];
+    function generateTokens(): void {
+        let tokenFetchPromises = TokenListsToTokens(
+            tokenLists.filter((o) => o[1])
+        );
+
+        tokenFetchPromises.then((p) => {
+            tokens = TokensUniqueByAddress(p);
         });
+    }
+
+    function filterTokens(providerName: string, include: boolean): void {
+        if (include) {
+            let tokenFetchPromises = TokenListsToTokens(
+                tokenLists.filter((o) => o[0].Name === providerName)
+            );
+
+            tokenFetchPromises.then((p) => {
+                tokens = [...tokens, ...TokensUniqueByAddress(p)];
+            });
+        } else {
+            tokens = tokens.filter((o) => o.provider !== providerName);
+        }
     }
 
     generateTokens();
@@ -35,7 +69,7 @@
             <input
                 type="checkbox"
                 bind:checked={tokenList[1]}
-                on:change={generateTokens}
+                on:change={(_) => filterTokens(tokenList[0].Name, tokenList[1])}
             />
             {tokenList[0].Name}
         </label>
