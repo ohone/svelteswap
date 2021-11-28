@@ -1,7 +1,7 @@
-import type { ITokenListAdapter } from "./ITokenListAdapter";
+import type { ITokenListProvider } from "./ITokenListProvider";
 import type { Token } from "./Token";
 
-export class YearnTokenListAdapter implements ITokenListAdapter {
+export class YearnTokenListProvider implements ITokenListProvider {
     Name: string = "Yearn"
 
     async GetTokenList(): Promise<Token[]> {

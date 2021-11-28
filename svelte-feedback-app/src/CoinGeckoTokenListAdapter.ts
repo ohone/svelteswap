@@ -1,7 +1,7 @@
-import type { ITokenListAdapter } from "./ITokenListAdapter";
+import type { ITokenListProvider as ITokenListProvider } from "./ITokenListProvider";
 import type { Token } from "./Token";
 
-export class CoinGeckoTokenListAdapter implements ITokenListAdapter {
+export class CoinGeckoTokenListProvider implements ITokenListProvider {
     Name: string = "CoinGecko"
 
     async GetTokenList(): Promise<Token[]> {

@@ -1,6 +1,6 @@
 import type { Token } from "./Token";
 
-export interface ITokenListAdapter {
+export interface ITokenListProvider {
     GetTokenList: () => Promise<Token[]>
     readonly Name: string
 }

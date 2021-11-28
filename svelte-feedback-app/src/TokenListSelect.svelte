@@ -1,16 +1,17 @@
 <script lang="ts">
-    import { CoinGeckoTokenListAdapter } from "./CoinGeckoTokenListAdapter";
-    import type { ITokenListAdapter } from "./ITokenListAdapter";
+    import { CoinGeckoTokenListProvider } from "./CoinGeckoTokenListAdapter";
+    import type { ITokenListProvider } from "./ITokenListProvider";
+import { StoreWrappedTokenListProvider } from "./StoreWrappedTokenListProvider";
     import type { Token } from "./Token";
-    import { YearnTokenListAdapter } from "./YearnTokenListAdapter";
+    import { YearnTokenListProvider } from "./YearnTokenListProvider";
     export let tokens: Token[];
-    let tokenLists: [ITokenListAdapter, boolean][] = [
-        [new CoinGeckoTokenListAdapter(), false],
-        [new YearnTokenListAdapter(), true],
+    let tokenLists: [ITokenListProvider, boolean][] = [
+        [new StoreWrappedTokenListProvider(new CoinGeckoTokenListProvider()), false],
+        [new StoreWrappedTokenListProvider(new YearnTokenListProvider()), true],
     ];
 
     async function TokenListsToTokens(
-        tokenLists: [ITokenListAdapter, boolean][]
+        tokenLists: [ITokenListProvider, boolean][]
     ): Promise<Token[]> {
         const p = await Promise.all<Token[]>(
             tokenLists
