@@ -1,12 +1,16 @@
 <script lang="ts">
-    import { CoinGeckoTokenListProvider } from "./CoinGeckoTokenListAdapter";
-    import type { ITokenListProvider } from "./ITokenListProvider";
-import { StoreWrappedTokenListProvider } from "./StoreWrappedTokenListProvider";
-    import type { Token } from "./Token";
-    import { YearnTokenListProvider } from "./YearnTokenListProvider";
+    import type { ITokenListProvider } from "../models/TokenListProviders/ITokenListProvider";
+
+    import type { Token } from "../models/Token";
+    import { CoinGeckoTokenListProvider } from "../models/TokenListProviders/CoinGeckoTokenListProvider";
+    import { StoreWrappedTokenListProvider } from "../models/TokenListProviders/StoreWrappedTokenListProvider";
+    import { YearnTokenListProvider } from "../models/TokenListProviders/YearnTokenListProvider";
     export let tokens: Token[];
     let tokenLists: [ITokenListProvider, boolean][] = [
-        [new StoreWrappedTokenListProvider(new CoinGeckoTokenListProvider()), false],
+        [
+            new StoreWrappedTokenListProvider(new CoinGeckoTokenListProvider()),
+            false,
+        ],
         [new StoreWrappedTokenListProvider(new YearnTokenListProvider()), true],
     ];
 

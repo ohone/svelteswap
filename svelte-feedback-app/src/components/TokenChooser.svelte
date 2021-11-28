@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Token } from "./Token";
+    import type { Token } from "../models/Token";
 
     export let description: string;
     export let tokens: Token[];

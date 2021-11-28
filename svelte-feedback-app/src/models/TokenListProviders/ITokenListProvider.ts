@@ -1,4 +1,4 @@
-import type { Token } from "./Token";
+import type { Token } from "../Token";
 
 export interface ITokenListProvider {
     GetTokenList: () => Promise<Token[]>

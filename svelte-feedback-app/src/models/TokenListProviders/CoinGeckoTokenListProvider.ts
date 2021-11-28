@@ -1,5 +1,5 @@
 import type { ITokenListProvider as ITokenListProvider } from "./ITokenListProvider";
-import type { Token } from "./Token";
+import type { Token } from "../Token";
 
 export class CoinGeckoTokenListProvider implements ITokenListProvider {
     Name: string = "CoinGecko"

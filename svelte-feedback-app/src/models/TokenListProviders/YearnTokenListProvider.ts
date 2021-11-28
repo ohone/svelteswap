@@ -1,5 +1,5 @@
 import type { ITokenListProvider } from "./ITokenListProvider";
-import type { Token } from "./Token";
+import type { Token } from "../Token";
 
 export class YearnTokenListProvider implements ITokenListProvider {
     Name: string = "Yearn"

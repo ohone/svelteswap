@@ -2,7 +2,7 @@
 	import SwapContainer from "./SwapContainer.svelte";
 	import { ethers } from "ethers";
 	import TokenListSelect from "./TokenListSelect.svelte";
-	import type { Token } from "./Token";
+	import type { Token } from "../models/Token";
 	const provider = new ethers.providers.Web3Provider(
 		(window as any).ethereum,
 		"any"

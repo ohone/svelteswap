@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Styles, Button } from "sveltestrap";
     import SwitchButton from "./SwitchButton.svelte";
-    import type { Token } from "./Token";
+    import type { Token } from "../models/Token";
     import TokenChooser from "./TokenChooser.svelte";
 
     let fromToken: Token = null;
