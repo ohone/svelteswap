@@ -1,7 +1,9 @@
 <script lang="ts">
+    import type { Token } from "./Token";
+
     export let description: string;
-    export let tokens = [];
-    export let selected;
+    export let tokens: Token[] = [];
+    export let selected: Token;
     export let amount = 0;
 </script>
 
