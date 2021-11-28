@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import { CoinGeckoTokenListAdapter } from "./CoinGeckoTokenListAdapter";
     import type { ITokenListAdapter } from "./ITokenListAdapter";
     import type { Token } from "./Token";
+    import { YearnTokenListAdapter } from "./YearnTokenListAdapter";
     export let tokens: Token[];
     let tokenLists: [ITokenListAdapter, boolean][] = [
-        [new CoinGeckoTokenListAdapter(), true],
+        [new CoinGeckoTokenListAdapter(), false],
+        [new YearnTokenListAdapter(), true],
     ];
 
     function generateTokens() {
