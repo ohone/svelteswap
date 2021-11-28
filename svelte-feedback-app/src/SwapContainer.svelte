@@ -8,13 +8,18 @@
     let fromAmount: number = 0;
 
     let toToken: Token = null;
-    let toAmount = 0;
+    let toAmount: number = 0;
     export let tokens: Token[];
 
-    $: buttonDisabled =
-        fromAmount === null || fromAmount === undefined || fromAmount == 0;
+    let buttonDisabled = true;
+    $: {
+        const amountsInvalid =
+            fromAmount === null || fromAmount === undefined || fromAmount == 0;
+        const tokensInvalid = fromToken === null || toToken === null;
+        buttonDisabled = amountsInvalid || tokensInvalid;
+    }
 
-    function swapTokens(_) {
+    function swapTokens(_: any) {
         let intermediary = fromToken;
         let tAmount = fromAmount;
         fromToken = toToken;
