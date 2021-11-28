@@ -1,48 +1,47 @@
 <script lang="ts">
-import { Styles, Button } from 'sveltestrap';
-import SwitchButton from "./SwitchButton.svelte";
-import TokenChooser from "./TokenChooser.svelte";
+    import { Styles, Button } from "sveltestrap";
+    import SwitchButton from "./SwitchButton.svelte";
+    import type { Token } from "./Token";
+    import TokenChooser from "./TokenChooser.svelte";
 
-let fromToken = null;
-let fromAmount : number = 0;
+    let fromToken = null;
+    let fromAmount: number = 0;
 
-let toToken = null;
-let toAmount = 0;
+    let toToken = null;
+    let toAmount = 0;
+    export let tokens: Token[];
 
-async function getTokens(){
-    const res = await fetch('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
-    const text : any[] = JSON.parse(await res.text());
-    const ethTokens = text.filter(o => Object.prototype.hasOwnProperty.call(o.platforms,'ethereum'));
-    return ethTokens;
-}
+    $: buttonDisabled =
+        fromAmount === null || fromAmount === undefined || fromAmount == 0;
 
-let tokenListPromise = getTokens();
-$: buttonDisabled = fromAmount === null || fromAmount === undefined || fromAmount == 0;
-
-function swapTokens(_){
-    let intermediary = fromToken;
-    let tAmount = fromAmount;
-    fromToken = toToken;
-    fromAmount = toAmount;
-    toToken = intermediary;
-    toAmount = tAmount;
-}
+    function swapTokens(_) {
+        let intermediary = fromToken;
+        let tAmount = fromAmount;
+        fromToken = toToken;
+        fromAmount = toAmount;
+        toToken = intermediary;
+        toAmount = tAmount;
+    }
 </script>
-<Styles/>
+
+<Styles />
 <div>
-    {#await tokenListPromise}
-        <p>loading tokens...</p>
-    {:then tokenList}
     <div class="card">
-        <TokenChooser description='from' tokens={tokenList} bind:selected={fromToken} bind:amount={fromAmount}></TokenChooser>
-        <SwitchButton on:switch={swapTokens}></SwitchButton>
-        <TokenChooser description='to' tokens={tokenList} bind:selected={toToken} bind:amount={toAmount}></TokenChooser>
+        <TokenChooser
+            description="from"
+            {tokens}
+            bind:selected={fromToken}
+            bind:amount={fromAmount}
+        />
+        <SwitchButton on:switch={swapTokens} />
+        <TokenChooser
+            description="to"
+            {tokens}
+            bind:selected={toToken}
+            bind:amount={toAmount}
+        />
         <Button bind:disabled={buttonDisabled}>swap</Button>
     </div>
-    {:catch error}
-        <p>{error.message}</p>
-    {/await}
-
 </div>
 
 <style>
