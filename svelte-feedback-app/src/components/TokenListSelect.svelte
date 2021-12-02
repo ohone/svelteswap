@@ -37,22 +37,22 @@
 
     function generateTokens(): void {
         let tokenFetchPromises = tokenLists
-            .filter(([_,enabled]) => enabled)
-            .flatMap(([list,_]) => TokenListToTokens(list));
+            .filter(([_, enabled]) => enabled)
+            .flatMap(([list, _]) => TokenListToTokens(list));
 
         Promise.all(tokenFetchPromises).then((p) => {
             tokens = TokensUniqueByAddress(p.flat());
         });
     }
 
-    function filterTokens(providerName: string, include: boolean): void {
-        if (include) {
-            Promise.all(
-                tokenLists
-                    .filter(([list,_]) => list.Name === providerName)
-                    .flatMap((o) => TokenListToTokens(o[0]))
-            ).then((p) => {
-                tokens = [...tokens, ...TokensUniqueByAddress(p.flat())];
+    function filterTokens(providerName: string, enabled: boolean): void {
+        if (enabled) {
+            const enabledLists = tokenLists
+                .filter(([list, _]) => list.Name === providerName)
+                .flatMap(([list, _]) => TokenListToTokens(list));
+
+            Promise.all(enabledLists).then((tk) => {
+                tokens = [...tokens, ...TokensUniqueByAddress(tk.flat())];
             });
         } else {
             tokens = tokens.filter((o) => o.provider !== providerName);
@@ -64,14 +64,14 @@
 
 <div class="card">
     <h5 class="card-title">Selec token lists</h5>
-    {#each tokenLists as tokenList}
+    {#each tokenLists as [list, enabled]}
         <label>
             <input
                 type="checkbox"
-                bind:checked={tokenList[1]}
-                on:change={(_) => filterTokens(tokenList[0].Name, tokenList[1])}
+                bind:checked={enabled}
+                on:change={(_) => filterTokens(list.Name, enabled)}
             />
-            {tokenList[0].Name}
+            {list.Name}
         </label>
     {/each}
 </div>
