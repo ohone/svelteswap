@@ -6,7 +6,7 @@
     import { StoreWrappedTokenListProvider } from "../models/TokenListProviders/StoreWrappedTokenListProvider";
     import { YearnTokenListProvider } from "../models/TokenListProviders/YearnTokenListProvider";
     export let tokens: Token[];
-    let tokenLists: [ITokenListProvider, boolean][] = [
+    let tokenLists: [list: ITokenListProvider, enabled: boolean][] = [
         [
             new StoreWrappedTokenListProvider(new CoinGeckoTokenListProvider()),
             false,
@@ -14,23 +14,13 @@
         [new StoreWrappedTokenListProvider(new YearnTokenListProvider()), true],
     ];
 
-    function TokenListsToTokens(
-        tokenLists: ITokenListProvider[]
+    function TokenListToTokens(
+        tokenList: ITokenListProvider
     ): Promise<Token[]> {
-        return Promise.all<Token[]>(
-            tokenLists
-                .flatMap((o) =>
-                    o.GetTokenList().catch((ex) => {
-                        console.log(o.Name + ex);
-                        return new Array<Token>();
-                    })
-                )
-                .reduce((sum, current) => {
-                    sum.push(current);
-                    return sum;
-                }, new Array<Promise<Token[]>>())
-        )
-            .then((b) => b.flat());
+        return tokenList.GetTokenList().catch((ex) => {
+            console.log(tokenList.Name + ex);
+            return new Array<Token>();
+        });
     }
 
     function TokensUniqueByAddress(tokens: Token[]): Token[] {
@@ -46,23 +36,23 @@
     }
 
     function generateTokens(): void {
-        let tokenFetchPromises = TokenListsToTokens(
-            tokenLists.filter((o) => o[1]).flatMap((o) => o[0])
-        );
+        let tokenFetchPromises = tokenLists
+            .filter(([_,enabled]) => enabled)
+            .flatMap(([list,_]) => TokenListToTokens(list));
 
-        tokenFetchPromises.then((p) => {
-            tokens = TokensUniqueByAddress(p);
+        Promise.all(tokenFetchPromises).then((p) => {
+            tokens = TokensUniqueByAddress(p.flat());
         });
     }
 
     function filterTokens(providerName: string, include: boolean): void {
         if (include) {
-            let tokenFetchPromises = TokenListsToTokens(
-                tokenLists.filter((o) => o[0].Name === providerName).flatMap(o => o[0])
-            );
-
-            tokenFetchPromises.then((p) => {
-                tokens = [...tokens, ...TokensUniqueByAddress(p)];
+            Promise.all(
+                tokenLists
+                    .filter(([list,_]) => list.Name === providerName)
+                    .flatMap((o) => TokenListToTokens(o[0]))
+            ).then((p) => {
+                tokens = [...tokens, ...TokensUniqueByAddress(p.flat())];
             });
         } else {
             tokens = tokens.filter((o) => o.provider !== providerName);
