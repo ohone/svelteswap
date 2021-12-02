@@ -1,7 +1,7 @@
 export class Token {
-    symbol: string;
-    id: string;
-    name: string;
-    address: string;
-    provider: string;
+    symbol: string | undefined;
+    id: string | undefined;
+    name: string | undefined; 
+    address: string | undefined;
+    provider: string | undefined;
 }

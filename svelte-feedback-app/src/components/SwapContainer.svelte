@@ -4,10 +4,10 @@
     import type { Token } from "../models/Token";
     import TokenChooser from "./TokenChooser.svelte";
 
-    let fromToken: Token = null;
+    let fromToken: Token | null = null;
     let fromAmount: number = 0;
 
-    let toToken: Token = null;
+    let toToken: Token | null = null;
     let toAmount: number = 0;
     export let tokens: Token[];
 

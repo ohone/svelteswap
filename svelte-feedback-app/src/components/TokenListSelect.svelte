@@ -14,18 +14,23 @@
         [new StoreWrappedTokenListProvider(new YearnTokenListProvider()), true],
     ];
 
-    async function TokenListsToTokens(
-        tokenLists: [ITokenListProvider, boolean][]
+    function TokenListsToTokens(
+        tokenLists: ITokenListProvider[]
     ): Promise<Token[]> {
-        const p = await Promise.all<Token[]>(
+        return Promise.all<Token[]>(
             tokenLists
-                .flatMap((o) => o[0].GetTokenList())
+                .flatMap((o) =>
+                    o.GetTokenList().catch((ex) => {
+                        console.log(o.Name + ex);
+                        return new Array<Token>();
+                    })
+                )
                 .reduce((sum, current) => {
                     sum.push(current);
                     return sum;
-                }, [])
-        );
-        return p.flat();
+                }, new Array<Promise<Token[]>>())
+        )
+            .then((b) => b.flat());
     }
 
     function TokensUniqueByAddress(tokens: Token[]): Token[] {
@@ -42,7 +47,7 @@
 
     function generateTokens(): void {
         let tokenFetchPromises = TokenListsToTokens(
-            tokenLists.filter((o) => o[1])
+            tokenLists.filter((o) => o[1]).flatMap((o) => o[0])
         );
 
         tokenFetchPromises.then((p) => {
@@ -53,7 +58,7 @@
     function filterTokens(providerName: string, include: boolean): void {
         if (include) {
             let tokenFetchPromises = TokenListsToTokens(
-                tokenLists.filter((o) => o[0].Name === providerName)
+                tokenLists.filter((o) => o[0].Name === providerName).flatMap(o => o[0])
             );
 
             tokenFetchPromises.then((p) => {
