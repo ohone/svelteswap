@@ -1,7 +1,8 @@
-export class Token {
-    symbol: string | undefined;
+export interface Token {
+    symbol: string;
     id: string | undefined;
     name: string | undefined; 
-    address: string | undefined;
+    address: string;
     provider: string | undefined;
+    decimals: number;
 }
