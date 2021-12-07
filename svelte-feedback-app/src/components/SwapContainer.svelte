@@ -3,6 +3,7 @@
     import SwitchButton from "./SwitchButton.svelte";
     import type { Token } from "../models/Token";
     import TokenChooser from "./TokenChooser.svelte";
+    import { UniswapApi } from "../models/UniswapApi";
 
     let fromToken: Token | null = null;
     let fromAmount: number = 0;
@@ -17,6 +18,19 @@
             fromAmount === null || fromAmount === undefined || fromAmount == 0;
         const tokensInvalid = fromToken === null || toToken === null;
         buttonDisabled = amountsInvalid || tokensInvalid;
+    }
+
+    $: {
+        if (fromToken && toToken) {
+            if (fromToken.address && toToken.address && fromAmount > 0) {
+                new UniswapApi()
+                    .GetQuote(fromToken, toToken, fromAmount)
+                    .then((pairInfo) => {
+                        console.log(toAmount);
+                        toAmount = pairInfo.quoteGasAdjusted;
+                    });
+            }
+        }
     }
 
     function swapTokens(_: any) {
