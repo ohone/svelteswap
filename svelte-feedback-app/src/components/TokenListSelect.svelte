@@ -5,13 +5,23 @@
     import { CoinGeckoTokenListProvider } from "../models/TokenListProviders/CoinGeckoTokenListProvider";
     import { StoreWrappedTokenListProvider } from "../models/TokenListProviders/StoreWrappedTokenListProvider";
     import { YearnTokenListProvider } from "../models/TokenListProviders/YearnTokenListProvider";
+    import { GeminiTokenListProvider } from "../models/TokenListProviders/GeminiTokenListProvider";
+    import { KyberTokenListProvider } from "../models/TokenListProviders/KyberTokenListProvider";
     export let tokens: Token[];
     let tokenLists: [list: ITokenListProvider, enabled: boolean][] = [
         [
             new StoreWrappedTokenListProvider(new CoinGeckoTokenListProvider()),
             false,
         ],
-        [new StoreWrappedTokenListProvider(new YearnTokenListProvider()), true],
+        [
+            new StoreWrappedTokenListProvider(new YearnTokenListProvider()),
+            false,
+        ],
+        [
+            new StoreWrappedTokenListProvider(new GeminiTokenListProvider()),
+            false,
+        ],
+        [new StoreWrappedTokenListProvider(new KyberTokenListProvider()), true],
     ];
 
     function TokenListToTokens(
