@@ -12,7 +12,15 @@
         {description}
     </h5>
     <select bind:value={selected}>
-        {#each tokens as token (token.address)}
+        {#each tokens.sort(function (a, b) {
+            if (a.symbol < b.symbol) {
+                return -1;
+            }
+            if (a.symbol > b.symbol) {
+                return 1;
+            }
+            return 0;
+        }) as token (token.address)}
             <option value={token}>
                 {token.symbol}
             </option>
