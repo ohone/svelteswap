@@ -10,7 +10,7 @@
 </script>
 
 <div>
-    <Button on:click={switchTokens}>⬇️</Button>
+    <Button on:click={switchTokens}>🔃</Button>
 </div>
 
 <Styles />
