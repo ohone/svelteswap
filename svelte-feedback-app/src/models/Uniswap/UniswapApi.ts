@@ -1,5 +1,5 @@
-import type { PairInfo } from "./PairInfo";
-import type { QuoteParams } from "./QuoteParams";
+import type { PairInfo } from "../PairInfo";
+import type { QuoteParams } from "../QuoteParams";
 import type { UniswapResponse } from "./UniswapResponse";
 
 export class UniswapApi {

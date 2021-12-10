@@ -3,7 +3,7 @@
   import SwitchButton from "./SwitchButton.svelte";
   import type { Token } from "../models/Token";
   import TokenChooser from "./TokenChooser.svelte";
-  import { UniswapApi } from "../models/UniswapApi";
+  import { UniswapApi } from "../models/Uniswap/UniswapApi";
   import { UserQuery } from "../models/UserQuery";
   import type { PairInfo } from "../models/PairInfo";
 
