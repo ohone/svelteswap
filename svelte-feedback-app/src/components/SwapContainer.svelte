@@ -55,7 +55,11 @@
       bind:selected={userQuery.FromToken}
       bind:amount={userQuery.Amount}
     />
-    <SwitchButton on:switch={swapTokens} />
+    <SwitchButton
+      on:switch={swapTokens}
+      disabled={userQuery.FromToken === undefined &&
+        userQuery.ToToken === undefined}
+    />
     <TokenChooser
       description="to"
       {tokens}
