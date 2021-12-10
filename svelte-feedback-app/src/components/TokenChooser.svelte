@@ -11,25 +11,29 @@
   <h5 class="card-title">
     {description}
   </h5>
-  <select bind:value={selected}>
-    {#each tokens.sort(function (a, b) {
-      if (a.symbol < b.symbol) {
-        return -1;
-      }
-      if (a.symbol > b.symbol) {
-        return 1;
-      }
-      return 0;
-    }) as token (token.address)}
-      <option value={token}>
-        {token.symbol}
-      </option>
-    {/each}
-  </select>
-  <input
-    bind:value={amount}
-    min="0"
-    disabled={selected === undefined}
-    placeholder={selected === undefined ? "select a token" : "enter an amount"}
-  />
+  <div>
+    <select bind:value={selected}>
+      {#each tokens.sort(function (a, b) {
+        if (a.symbol < b.symbol) {
+          return -1;
+        }
+        if (a.symbol > b.symbol) {
+          return 1;
+        }
+        return 0;
+      }) as token (token.address)}
+        <option value={token}>
+          {token.symbol}
+        </option>
+      {/each}
+    </select>
+    <input
+      bind:value={amount}
+      min="0"
+      disabled={selected === undefined}
+      placeholder={selected === undefined
+        ? "select a token"
+        : "enter an amount"}
+    />
+  </div>
 </div>
