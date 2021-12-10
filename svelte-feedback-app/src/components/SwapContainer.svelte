@@ -21,10 +21,11 @@
   $: {
     const quoteParams = userQuery.GetQuoteParams();
     if (quoteParams) {
+      quote = undefined;
       uniswap
         .GetQuote(quoteParams)
         .then((pairInfo) => {
-          toAmount = pairInfo.quoteGasAdjusted;
+          toAmount = pairInfo.quote;
           quote = pairInfo;
         })
         .catch((err) => {

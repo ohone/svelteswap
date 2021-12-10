@@ -2,7 +2,7 @@ export interface UniswapResponse {
     blockNumber: string | undefined;
     amount: string | undefined;
     amountDecimals: string | undefined;
-    quote: string | undefined;
+    quote: string;
     quoteDecimals: string | undefined;
     quoteGasAdjusted: string;
     quoteGasAdjustedDecimals: string | undefined;

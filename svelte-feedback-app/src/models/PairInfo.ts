@@ -1,4 +1,4 @@
 export interface PairInfo {
-    quoteGasAdjusted: number;
+    quote: number;
     contractAddress: string | undefined;
 }
