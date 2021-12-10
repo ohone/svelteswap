@@ -1,73 +1,67 @@
 <script lang="ts">
-    import { Styles, Button } from "sveltestrap";
-    import SwitchButton from "./SwitchButton.svelte";
-    import type { Token } from "../models/Token";
-    import TokenChooser from "./TokenChooser.svelte";
-    import { UniswapApi } from "../models/UniswapApi";
+  import { Styles, Button } from "sveltestrap";
+  import SwitchButton from "./SwitchButton.svelte";
+  import type { Token } from "../models/Token";
+  import TokenChooser from "./TokenChooser.svelte";
+  import { UniswapApi } from "../models/UniswapApi";
+  import { UserQuery } from "../models/UserQuery";
+  import type { PairInfo } from "../models/PairInfo";
 
-    let fromToken: Token | null = null;
-    let fromAmount: number = 0;
+  const userQuery = new UserQuery();
+  let quote: PairInfo | undefined;
+  let toAmount: number | undefined;
+  export let tokens: Token[];
 
-    let toToken: Token | null = null;
-    let toAmount: number = 0;
-    export let tokens: Token[];
+  let buttonDisabled = true;
+  $: {
+    buttonDisabled = !quote;
+  }
 
-    let buttonDisabled = true;
-    $: {
-        const amountsInvalid =
-            fromAmount === null || fromAmount === undefined || fromAmount == 0;
-        const tokensInvalid = fromToken === null || toToken === null;
-        buttonDisabled = amountsInvalid || tokensInvalid;
+  $: {
+    const quoteParams = userQuery.GetQuoteParams();
+    if (quoteParams) {
+      new UniswapApi().GetQuote(quoteParams).then((pairInfo) => {
+        toAmount = pairInfo.quoteGasAdjusted;
+        quote = pairInfo;
+      });
     }
+  }
 
-    $: {
-        if (fromToken && toToken) {
-            if (fromToken.address && toToken.address && fromAmount > 0) {
-                new UniswapApi()
-                    .GetQuote(fromToken, toToken, fromAmount)
-                    .then((pairInfo) => {
-                        console.log(toAmount);
-                        toAmount = pairInfo.quoteGasAdjusted;
-                    });
-            }
-        }
-    }
-
-    function swapTokens(_: any) {
-        let intermediary = fromToken;
-        let tAmount = fromAmount;
-        fromToken = toToken;
-        fromAmount = toAmount;
-        toToken = intermediary;
-        toAmount = tAmount;
-    }
+  function swapTokens(_: any) {
+    let intermediary = userQuery.FromToken;
+    let tAmount = userQuery.Amount;
+    userQuery.FromToken = userQuery.ToToken;
+    userQuery.Amount = toAmount;
+    userQuery.ToToken = intermediary;
+    toAmount = tAmount;
+  }
 </script>
 
 <Styles />
 <div>
-    <div class="card">
-        <TokenChooser
-            description="from"
-            {tokens}
-            bind:selected={fromToken}
-            bind:amount={fromAmount}
-        />
-        <SwitchButton on:switch={swapTokens} />
-        <TokenChooser
-            description="to"
-            {tokens}
-            bind:selected={toToken}
-            bind:amount={toAmount}
-        />
-        <Button bind:disabled={buttonDisabled}>swap</Button>
-    </div>
+  <div class="card">
+    <TokenChooser
+      description="from"
+      {tokens}
+      bind:selected={userQuery.FromToken}
+      bind:amount={userQuery.Amount}
+    />
+    <SwitchButton on:switch={swapTokens} />
+    <TokenChooser
+      description="to"
+      {tokens}
+      bind:selected={userQuery.ToToken}
+      bind:amount={toAmount}
+    />
+    <Button bind:disabled={buttonDisabled}>swap</Button>
+  </div>
 </div>
 
 <style>
-    .card {
-        max-width: 480px;
-        position: relative;
-        margin: auto;
-        padding: 10px;
-    }
+  .card {
+    max-width: 480px;
+    position: relative;
+    margin: auto;
+    padding: 10px;
+  }
 </style>

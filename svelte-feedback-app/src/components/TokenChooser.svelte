@@ -3,7 +3,7 @@
 
     export let description: string;
     export let tokens: Token[];
-    export let selected: Token | null;
+    export let selected: Token | undefined;
     export let amount = 0;
 </script>
 
