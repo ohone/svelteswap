@@ -1,11 +1,11 @@
 import type { PairInfo } from "./PairInfo";
-import type { Token } from "./Token";
 import type { UniswapResponse } from "./UniswapResponse";
+import type { QuoteParams } from "./UserQuery";
 
 export class UniswapApi {
 
-    async GetQuote(fromToken: Token, toToken: Token, fromAmount: number): Promise<PairInfo> {
-        const req = `https://api.uniswap.org/v1/quote?tokenInAddress=${fromToken.address}&tokenInChainId=1&tokenOutAddress=${toToken.address}&tokenOutChainId=1&amount=${fromAmount * (10 ** fromToken.decimals)}&type=exactIn&protocols=v3`
+    async GetQuote(quote : QuoteParams): Promise<PairInfo> {
+        const req = `https://api.uniswap.org/v1/quote?tokenInAddress=${quote.FromToken.address}&tokenInChainId=1&tokenOutAddress=${quote.ToToken.address}&tokenOutChainId=1&amount=${(quote.Amount * (10 ** quote.FromToken.decimals)).toLocaleString('fullwide', {useGrouping:false})}&type=exactIn&protocols=v3`
         const res = await fetch(req);
         const response: UniswapResponse = JSON.parse(await res.text());
         
@@ -25,7 +25,7 @@ export class UniswapApi {
         }
 
         return {
-            quoteGasAdjusted: +response.quoteGasAdjusted / (10 ** toToken.decimals), 
+            quoteGasAdjusted: +response.quoteGasAdjusted / (10 ** quote.ToToken.decimals), 
             contractAddress: oneStepRoutes[0][0].address
         };
     }
