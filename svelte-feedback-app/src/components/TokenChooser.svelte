@@ -26,5 +26,10 @@
       </option>
     {/each}
   </select>
-  <input type="number" bind:value={amount} min="0" />
+  <input
+    bind:value={amount}
+    min="0"
+    disabled={selected === undefined}
+    placeholder={selected === undefined ? "select a token" : "enter an amount"}
+  />
 </div>
