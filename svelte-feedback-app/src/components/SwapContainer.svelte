@@ -8,6 +8,7 @@
   import type { PairInfo } from "../models/PairInfo";
 
   const userQuery = new UserQuery();
+  const uniswap = new UniswapApi();
   let quote: PairInfo | undefined;
   let toAmount: number | undefined;
   export let tokens: Token[];
@@ -20,10 +21,17 @@
   $: {
     const quoteParams = userQuery.GetQuoteParams();
     if (quoteParams) {
-      new UniswapApi().GetQuote(quoteParams).then((pairInfo) => {
-        toAmount = pairInfo.quoteGasAdjusted;
-        quote = pairInfo;
-      });
+      uniswap
+        .GetQuote(quoteParams)
+        .then((pairInfo) => {
+          toAmount = pairInfo.quoteGasAdjusted;
+          quote = pairInfo;
+        })
+        .catch((err) => {
+          console.log(err);
+          toAmount = undefined;
+          quote = undefined;
+        });
     }
   }
 
