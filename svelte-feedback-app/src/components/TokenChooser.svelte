@@ -4,7 +4,7 @@
   export let description: string;
   export let tokens: Token[];
   export let selected: Token | undefined;
-  export let amount = 0;
+  export let amount: number | undefined = undefined;
 </script>
 
 <div class="card">
