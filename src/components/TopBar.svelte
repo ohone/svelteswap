@@ -13,6 +13,8 @@
         color: #ffffff;
     }
     .address {
+        top: 50%;
         color: #ffffff;
+        margin-bottom: 0;
     }
 </style>
