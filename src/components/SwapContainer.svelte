@@ -14,50 +14,23 @@
         buttonDisabled = !swapState.IsComplete();
     }
 
-    $: {
+    function onInput() {
+        const query = swapState.RequiredQuery();
+        if (query !== undefined) {
+            uniswap.GetQuote(query).then((pairInfo) => {
+                swapState.From.Token == query.ToToken
+                    ? (swapState.From.Count = pairInfo.quote)
+                    : (swapState.To.Count = pairInfo.quote);
+            });
+        }
     }
 
-    function onInput(backwards: boolean) {
-        //if (!swapState.ToAmount) {
-        //    backwards = false;
-        //}
-        //const quoteParams = swapState.GetQuoteParams(backwards);
-        //console.log(swapState);
-        //console.log(
-        //    "from " + quoteParams?.FromToken.symbol + " " + quoteParams?.Amount
-        //);
-        //console.log("to " + quoteParams?.ToToken.symbol);
-        //if (quoteParams) {
-        //    uniswap
-        //        .GetQuote(quoteParams)
-        //        .then((pairInfo) => {
-        //            console.log(pairInfo);
-        //            console.log(swapState);
-        //            if (backwards) {
-        //                console.log("updated for");
-        //                swapState.FromAmount = pairInfo.quote;
-        //            } else {
-        //                console.log("updated to");
-        //                swapState.ToAmount = pairInfo.quote;
-        //            }
-        //        })
-        //        .catch((err) => {
-        //            console.log(err);
-        //            if (backwards) {
-        //                swapState.FromAmount = undefined;
-        //            } else {
-        //                swapState.ToAmount = undefined;
-        //            }
-        //        });
-        //}
-    }
-
-    function swapTokens(_: any = null): SwapState {
+    function swapTokens(): SwapState {
         const state = new SwapState();
         state.From.Token = swapState.To.Token;
         state.From.Count = swapState.To.Count;
-        state.To.Token = swapState.To.Token;
-        state.To.Count = swapState.To.Count;
+        state.To.Token = swapState.From.Token;
+        state.To.Count = swapState.From.Count;
         return state;
     }
 
@@ -72,9 +45,8 @@
         <TokenChooser
             description="from"
             {tokens}
-            onTokenChanged={() => {
-                onInput(false);
-            }}
+            onAmountChanged={onInput}
+            onTokenChanged={onInput}
             bind:tokenCount={swapState.From}
         />
         <SwitchButton
@@ -87,13 +59,9 @@
         <TokenChooser
             description="to"
             {tokens}
-            onAmountChanged={() => {
-                onInput(true);
-            }}
-            onTokenChanged={() => {
-                onInput(true);
-            }}
-            bind:tokenCount={swapState.From}
+            onAmountChanged={onInput}
+            onTokenChanged={onInput}
+            bind:tokenCount={swapState.To}
         />
         <Button bind:disabled={buttonDisabled}>swap</Button>
     </div>

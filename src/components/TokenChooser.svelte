@@ -37,7 +37,6 @@
             on:input={(e) => {
                 console.log(e);
                 if (onAmountChanged) {
-                    console.log("onAmountChanged");
                     onAmountChanged();
                 }
             }}

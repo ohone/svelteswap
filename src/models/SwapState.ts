@@ -22,7 +22,7 @@ export class SwapState {
 
     RequiredQuery(): QuoteParams | undefined {
         if (this.From !== undefined && this.From.IsComplete()) {
-            if (this.To.Token !== undefined) {
+            if (this.To.Token != null) {
                 return {
                     FromToken: this.From.Token!,
                     ToToken: this.To.Token,
@@ -31,7 +31,7 @@ export class SwapState {
             }
         }
         if (this.To !== undefined && this.To.IsComplete()) {
-            if (this.From.Token !== undefined) {
+            if (this.From.Token != null) {
                 return {
                     FromToken: this.To.Token!,
                     ToToken: this.From.Token,
