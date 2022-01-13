@@ -25,7 +25,6 @@
                 optionIdentifier={"address"}
                 placeholder={"select a token"}
                 on:select={(e) => {
-                    console.log(e);
                     if (onTokenChanged) {
                         onTokenChanged();
                     }
@@ -35,7 +34,6 @@
         <input
             bind:value={tokenCount.Count}
             on:input={(e) => {
-                console.log(e);
                 if (onAmountChanged) {
                     onAmountChanged();
                 }
